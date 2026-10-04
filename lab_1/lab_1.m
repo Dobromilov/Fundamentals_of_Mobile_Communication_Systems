@@ -1,5 +1,6 @@
 [y, Fs] = audioread("voice.wav");
 
+% Если запись стереофоническая, преобразуем её в один канал.
 if size(y, 2) == 2
     y = mean(y, 2);
 end
@@ -16,6 +17,7 @@ Fs_calc = N / T;
 fprintf("Рассчитанная частота дискретизации: %.0f Гц\n", Fs_calc);
 
 
+% Оставляем каждый десятый отсчёт и уменьшаем частоту дискретизации.
 y1 = downsample(y, 10);
 Fs1 = Fs / 10;
 
@@ -59,6 +61,7 @@ title("Сигнал после уменьшения частоты дискре�
 grid on;
 
 
+% Вычисляем односторонний амплитудный спектр исходной записи.
 Y = fft(y);
 N = length(y);
 
@@ -73,6 +76,7 @@ end
 f = (0:floor(N/2)) * Fs / N;
 
 
+% Вычисляем спектр прореженной записи.
 Y1 = fft(y1);
 N1 = length(y1);
 
@@ -107,17 +111,13 @@ grid on;
 
 function yq = quantize_signal(y, bits)
 
+    % Число уровней квантования определяется разрядностью АЦП.
     levels = 2^bits;
-
     ymin = min(y);
     ymax = max(y);
-
     y_norm = (y - ymin) / (ymax - ymin);
-
     yq = round(y_norm * (levels - 1));
-
     yq = yq / (levels - 1);
-
     yq = yq * (ymax - ymin) + ymin;
 
 end

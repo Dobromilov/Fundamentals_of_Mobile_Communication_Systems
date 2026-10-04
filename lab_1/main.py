@@ -3,11 +3,12 @@ import matplotlib.pyplot as plt
 import sys
 
 freq = 8
-k = 64
+k = 64  # минимальная частота дискретизации: 2 * 32 Гц
 freq_new = freq
-k_new = k*4
+k_new = k*4  # частота дискретизации, увеличенная в четыре раза
 
 def dft(signal):
+    # Прямое ДПФ: перевод отсчётов сигнала в частотный спектр.
     N = len(signal)
     result = []
     for k in range(N):
@@ -22,6 +23,7 @@ def dft(signal):
     return result
 
 def restored_dft(spectrum):
+    # Обратное ДПФ: восстановление отсчётов по спектру.
     N = len(spectrum)
     restored_sample = [0] * N
     for n in range(N):
@@ -36,17 +38,19 @@ def restored_dft(spectrum):
     return restored_sample
 
 def f(t, frequency):
+    # Вариант 9: сумма косинусов с частотами f и 4f.
     return (
         math.cos(2 * math.pi * frequency * t)
         + math.cos(2 * math.pi * frequency * 4 * t)
     )
 
 def main():
+    # Формируем отсчёты сигнала длительностью одну секунду.
     t = [i / k for i in range(k)]
     samples = [f(i, freq) for i in t]
-    # print("Исходные семплы")
-    # for i in range(len(samples)):
-    #     print(i, samples[i])
+    print("Исходные семплы")
+    for i in range(len(samples)):
+        print(i, samples[i])
 
     spectrum = dft(samples)
     # print("Спектр исходного сигнала")
@@ -76,6 +80,7 @@ def main():
     print("размер семплов new: ", sys.getsizeof(samples_new))
     print("размер спектра new: ", sys.getsizeof(spectrum_new))
 
+    # Оставляем положительную половину спектра для построения графика.
     N = len(spectrum)
     frequencies = [i * k / N for i in range(N // 2 + 1)]
     amplitudes = [abs(spectrum[i]) for i in range(N // 2 + 1)]
