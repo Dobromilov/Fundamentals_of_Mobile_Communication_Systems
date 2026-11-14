@@ -83,16 +83,28 @@ def main():
     # Оставляем положительную половину спектра для построения графика.
     N = len(spectrum)
     frequencies = [i * k / N for i in range(N // 2 + 1)]
-    amplitudes = [abs(spectrum[i]) for i in range(N // 2 + 1)]
+    amplitudes = []
+
+    for i in range(N // 2 + 1):
+        amplitude = abs(spectrum[i]) / N
+        if i != 0 and i != N // 2:
+            amplitude *= 2
+        amplitudes.append(amplitude)
 
     N_new = len(spectrum_new)
     frequencies_new = [i * k_new / N_new for i in range(N_new // 2 + 1)]
-    amplitudes_new = [abs(spectrum_new[i]) for i in range(N_new // 2 + 1)]
+    amplitudes_new = []
+
+    for i in range(N_new // 2 + 1):
+        amplitude = abs(spectrum_new[i]) / N_new
+        if i != 0 and i != N_new // 2:
+            amplitude *= 2
+        amplitudes_new.append(amplitude)
 
     fig1, ax1 = plt.subplots(3, 1, figsize=(10, 8))
 
     ax1[0].plot(t, samples)
-    ax1[0].set_title("Исходный сигнал, freq = 8 Гц")
+    ax1[0].set_title("Исходный сигнал, частота дискретизации = 64 Гц")
     ax1[0].set_xlabel("Время, с")
     ax1[0].set_ylabel("Амплитуда")
     ax1[0].grid()
@@ -114,7 +126,7 @@ def main():
     fig2, ax2 = plt.subplots(3, 1, figsize=(10, 8))
 
     ax2[0].plot(t_new, samples_new)
-    ax2[0].set_title("Исходный сигнал, freq = 32 Гц")
+    ax2[0].set_title("Исходный сигнал, частота дискретизации = 256 Гц")
     ax2[0].set_xlabel("Время, с")
     ax2[0].set_ylabel("Амплитуда")
     ax2[0].grid()
